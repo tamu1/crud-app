@@ -1,0 +1,46 @@
+{
+  "users": [
+    {
+      "name": "tamana",
+      "lastname": "sharma",
+      "email": "abc@gmail.com",
+      "password": "abcd",
+      "id": 1
+    },
+    {
+      "name": "hello",
+      "lastname": "react",
+      "email": "abc@gmail.com",
+      "password": "12345",
+      "id": 2
+    },
+    {
+      "id": "abc",
+      "name": "tam",
+      "lastname": "sharma",
+      "email": "abc@gmail.com",
+      "password": "1234"
+    },
+    {
+      "id": "kkk",
+      "name": "tamana",
+      "lastname": "",
+      "email": "",
+      "password": "tanu"
+    },
+    {
+      "id": "sign",
+      "name": "tamana",
+      "lastname": "sharma",
+      "email": "abc@gmail.com",
+      "password": "1111"
+    },
+    {
+      "id": "tamana",
+      "name": "",
+      "lastname": "",
+      "email": "",
+      "password": "tanu"
+    }
+  ]
+}
