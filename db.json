@@ -41,6 +41,30 @@
       "lastname": "",
       "email": "",
       "password": "tanu"
+    },
+    {
+      "id": "nihira",
+      "name": "null",
+      "lastname": "value",
+      "email": "abc@gmail",
+      "password": "123"
+    }
+  ],
+  "total-users": [
+    {
+      "id": 1,
+      "name": "johhn",
+      "email": "tanu@gmail.com"
+    },
+    {
+      "name": "hello",
+      "email": "abc@gmail",
+      "id": 2
+    },
+    {
+      "name": "tanu",
+      "email": "ttegfcg@gmail.com",
+      "id": 3
     }
   ]
 }
