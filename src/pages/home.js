@@ -1,101 +1,104 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useParams } from "react-router-dom";
 import DeleteIcon from '@mui/icons-material/Delete';
+// import AuthContext from "../contexts/AuthContext";
+import { AuthContext } from '../contexts/AuthContext';
+import { Button } from "@mui/material";
 
 const Home = () => {
-    const navigate = useNavigate();
-    const { dataid } = useParams();
-    const [data, datachange] = useState("");
-    const LoadEdit = (id) => {
-        navigate("/edit/" + id)
+  const navigate = useNavigate();
+  const { isLoggedIn, setIsLoggedIn } = useContext(AuthContext);
 
-    }
+  const [data, setData] = useState([]);
 
-    const Removefunction = (id) => {
-        if (window.confirm('Do you want to remove?')) {
-            fetch("http://localhost:3000/total-users/" + id, {
-                method: "DELETE",
-            })
-            .then((res) => {
-                    alert('rEMOVED successfully');
-                    window.location.reload();
+  const loadEdit = (id) => {
+    navigate(`/edit/${id}`);
+  };
 
-
-
-                }).catch((err) => {
-                    console.log(err.message)
-                })
-
-        }
-
-    }
-    useEffect(() => {
-        let name = sessionStorage.getItem('name');
-        if (name === '' || name === null) {
-            navigate('/login');
-        }
-        fetch("http://localhost:3000/total-users").then((res) => {
-            return res.json();
-        }).then((resp) => {
-            datachange(resp);
-
-        }).catch((err) => {
-            console.log(err.message);
-
+  const removeFunction = (id) => {
+    if (window.confirm('Do you want to remove?')) {
+      fetch(`${process.env.REACT_APP_BASE_URL}/total-users/${id}`, {
+        method: "DELETE",
+      })
+        .then((res) => {
+          alert('REMOVED successfully');
+          window.location.reload();
         })
+        .catch((err) => {
+          console.log(err.message);
+        });
+    }
+  };
 
-    }, []);
-    return (
-        <>
-            <div className="header">
-                <Link className="links home" to={'/Home'}>Home</Link>
-                <Link className="links" to={'/login'}>Logout</Link>
-            </div>
-            <h1 className="text-align mt-20"> Welcome to dshboard page</h1>
-            <div className="add-btn">
-                <Link to="/add">Add data (+)</Link>
+  useEffect(() => {
+    let name = sessionStorage.getItem('name');
+    console.log(name);
+    let token = localStorage.getItem('token-info');
+    console.log(token);
+    
+    if (!isLoggedIn && !token) {
+      navigate('/login');
+    } else {
+      fetch(`${process.env.REACT_APP_BASE_URL}/total-users`)
+        .then((res) => res.json())
+        .then((data) => {
+          setData(data);
+        })
+        .catch((err) => {
+          console.log(err.message);
+        });
+    }
+  }, [isLoggedIn, navigate]);
 
-            </div>
+  const logout = () => {
+    localStorage.removeItem('token-info');
+    setIsLoggedIn(false);
+    navigate('/login');
+  
+  };
 
-            <table className="table">
-                <thead>
-                    <tr>
-                        <td>ID</td>
-                        <td>Name</td>
-                        <td>Email</td>
-                        <td>Action</td>
-                    </tr>
-                </thead>
-                <tbody>
-                    {data &&
-                        data.map(item => (
-                            <tr key={item.id}>
-                                <td>{item.id}</td>
-                                <td>{item.name}</td>
-                                <td>{item.email}</td>
-                                <td>
-                                    <div className="action-btn">
-                                    <a className="edit-btn" onClick={() => { LoadEdit(item.id) }}>Edit</a>
-                                    <a className="delete-btn" onClick={() => { Removefunction(item.id) }}><DeleteIcon /></a>
+  return (
+    <>
+      <div className="header">
+        <Link className="links home" to={'/home'}>Home</Link>
+        {isLoggedIn ? (
+          <Button variant="outlined" onClick={logout}>Logout</Button>
+        ) : (
+          <Link className="links" to={'/login'}>Login</Link>
+        )}
+      </div>
+      <h1 className="text-align mt-20">Welcome to the dashboard page</h1>
+      <div className="add-btn">
+        <Link to="/add">Add data (+)</Link>
+      </div>
 
-                                    </div>
-                                
-                                </td>
+      <table className="table">
+        <thead>
+          <tr>
+            <td>ID</td>
+            <td>Name</td>
+            <td>Email</td>
+            <td>Action</td>
+          </tr>
+        </thead>
+        <tbody>
+          {data.map((item) => (
+            <tr key={item.id}>
+              <td>{item.id}</td>
+              <td>{item.name}</td>
+              <td>{item.email}</td>
+              <td>
+                <div className="action-btn">
+                  <div className="edit-btn" onClick={() => loadEdit(item.id)}>Edit</div>
+                  <div className="delete-btn" onClick={() => removeFunction(item.id)}><DeleteIcon /></div>
+                </div>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </>
+  );
+};
 
-
-
-                            </tr>
-                        ))
-                    }
-
-                </tbody>
-
-
-            </table>
-
-        </>
-
-    );
-}
-export default Home
+export default Home;
